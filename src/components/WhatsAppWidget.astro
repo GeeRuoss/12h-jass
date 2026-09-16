@@ -1,0 +1,60 @@
+---
+// Bouton WhatsApp flottant et invitation après 5 secondes, une fois par session.
+import WhatsAppIcon from "./WhatsAppIcon.astro";
+import { event, waLink } from "../data/event";
+const link = waLink(event.registration.whatsapp, event.registration.whatsappIntro);
+---
+
+<aside class="wa-widget" aria-label="Inscription sur WhatsApp">
+  <div class="wa-bubble" id="wa-bubble" hidden>
+    <button class="wa-bubble-close" type="button" aria-label="Fermer ce message">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+    </button>
+    <p class="wa-bubble-title">Inscris-toi directement sur WhatsApp</p>
+    <p class="wa-bubble-text">Un message prêt à envoyer, le comité te confirme.</p>
+    <a class="wa-bubble-cta" href={link} target="_blank" rel="noopener noreferrer">Ouvrir WhatsApp <span aria-hidden="true">↗</span></a>
+  </div>
+  <a class="wa-float" href={link} target="_blank" rel="noopener noreferrer" aria-label="Écrire au comité sur WhatsApp">
+    <WhatsAppIcon />
+  </a>
+</aside>
+
+<script>
+  // === Invitation WhatsApp : 5 s après l'arrivée, une fois par session, jamais pendant la saisie ou le menu ===
+  const widget = document.querySelector<HTMLElement>(".wa-widget");
+  if (widget) {
+    const bubble = document.getElementById("wa-bubble")!;
+    const button = widget.querySelector<HTMLAnchorElement>(".wa-float")!;
+    const toggle = document.querySelector<HTMLButtonElement>(".menu-toggle");
+    const key = "jass-whatsapp-seen";
+    let seen = false;
+    let timer = 0;
+    try { seen = sessionStorage.getItem(key) === "1"; } catch {}
+    const remember = () => { seen = true; clearTimeout(timer); try { sessionStorage.setItem(key, "1"); } catch {} };
+    const close = () => {
+      const returnFocus = bubble.contains(document.activeElement);
+      bubble.hidden = true;
+      remember();
+      if (returnFocus) button.focus({ preventScroll: true });
+    };
+    const editing = () => document.activeElement?.matches("input, textarea, select, [contenteditable='true']");
+    const menuOpen = () => toggle?.getAttribute("aria-expanded") === "true";
+    const sync = () => { widget.hidden = Boolean(editing() || menuOpen()); };
+    const invite = () => {
+      if (seen) return;
+      sync();
+      if (widget.hidden || document.hidden) { timer = window.setTimeout(invite, 500); return; }
+      bubble.hidden = false;
+      remember();
+    };
+    widget.querySelector(".wa-bubble-close")?.addEventListener("click", close);
+    widget.querySelectorAll("a").forEach((a) => a.addEventListener("click", close));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !bubble.hidden && !widget.hidden) close(); });
+    document.addEventListener("focusin", sync);
+    document.addEventListener("input", sync);
+    document.addEventListener("focusout", () => setTimeout(sync, 0));
+    if (toggle) new MutationObserver(sync).observe(toggle, { attributes: true, attributeFilter: ["aria-expanded"] });
+    sync();
+    if (!seen) timer = window.setTimeout(invite, 5000);
+  }
+</script>

@@ -1,0 +1,107 @@
+---
+// Inscription dans la page : le message WhatsApp s'écrit en direct, le visiteur l'envoie lui-même.
+import Arrow from "./Arrow.astro";
+import WhatsAppIcon from "./WhatsAppIcon.astro";
+import { event, waLink, telHref } from "../data/event";
+const r = event.registration;
+const fallback = waLink(r.whatsapp, r.whatsappIntro);
+const others = [
+  r.form && { label: "Formulaire en ligne", href: r.form, external: true },
+  r.email && { label: r.email, href: `mailto:${r.email}` },
+  r.phone && { label: r.phone, href: telHref(r.phone) },
+].filter(Boolean) as { label: string; href: string; external?: boolean }[];
+---
+
+<form
+  class="signup"
+  id="signup"
+  data-whatsapp={r.whatsapp}
+  data-event={`${event.shortName} du ${event.date.label.toLowerCase()}`}
+  novalidate
+>
+  <div class="signup-fields">
+    <div class="field">
+      <label for="player1">Joueur 1</label>
+      <input id="player1" name="player1" required maxlength="80" autocomplete="name" placeholder="Prénom et nom" />
+    </div>
+    <div class="field">
+      <label for="player2">Joueur 2</label>
+      <input id="player2" name="player2" required maxlength="80" placeholder="Prénom et nom" />
+    </div>
+    <div class="field">
+      <label for="team">Nom d'équipe <span>facultatif</span></label>
+      <input id="team" name="team" maxlength="60" placeholder="Les As de Bruson" />
+    </div>
+    <div class="field">
+      <label for="note">Une précision ? <span>facultatif</span></label>
+      <input id="note" name="note" maxlength="200" placeholder="Village, question, remarque" />
+    </div>
+  </div>
+  <div class="signup-side">
+    <p class="signup-preview-label">Ton message</p>
+    <p class="signup-message" id="signup-message" aria-live="polite"></p>
+    <a class="button button--whatsapp" id="signup-send" href={fallback} target="_blank" rel="noopener noreferrer">
+      <WhatsAppIcon />
+      Envoyer sur WhatsApp
+      <Arrow diagonal />
+    </a>
+    <p class="signup-help">
+      {r.whatsapp
+        ? "Le message s'ouvre dans WhatsApp. Relis-le, envoie-le, le comité confirme ton inscription."
+        : "Le message s'ouvre dans WhatsApp, à envoyer au comité. Numéro du comité à venir."}
+    </p>
+    {others.length > 0 && (
+      <p class="signup-others">
+        Aussi par{" "}
+        {others.map((o, i) => (
+          <>
+            {i > 0 && ", "}
+            <a href={o.href} target={o.external ? "_blank" : undefined} rel={o.external ? "noopener noreferrer" : undefined}>{o.label}</a>
+          </>
+        ))}
+      </p>
+    )}
+  </div>
+  <noscript>
+    <p class="signup-help">
+      Pour t'inscrire, envoie les noms des deux joueurs au comité sur{" "}
+      <a href={fallback}>WhatsApp</a>.
+    </p>
+  </noscript>
+</form>
+
+<script>
+  // === Inscription : message WhatsApp composé en direct, validé avant l'ouverture ===
+  const form = document.getElementById("signup") as HTMLFormElement | null;
+  if (form) {
+    const number = (form.dataset.whatsapp || "").replace(/\D/g, "");
+    const label = form.dataset.event || "12 heures du Jass";
+    const field = (id: string) => document.getElementById(id) as HTMLInputElement;
+    const player1 = field("player1"), player2 = field("player2"), team = field("team"), note = field("note");
+    const preview = document.getElementById("signup-message")!;
+    const send = document.getElementById("signup-send") as HTMLAnchorElement;
+    const value = (input: HTMLInputElement) => input.value.trim();
+    const build = () =>
+      [
+        `Bonjour ! On s'inscrit aux ${label}.`,
+        value(team) && `Équipe : ${value(team)}`,
+        `Joueur 1 : ${value(player1) || "…"}`,
+        `Joueur 2 : ${value(player2) || "…"}`,
+        value(note) && `Précision : ${value(note)}`,
+        "Merci !",
+      ]
+        .filter(Boolean)
+        .join("\n");
+    const update = () => {
+      const text = build();
+      preview.textContent = text;
+      send.href = `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+    };
+    form.addEventListener("input", update);
+    send.addEventListener("click", (event) => {
+      [player1, player2].forEach((input) => input.setCustomValidity(value(input) ? "" : "Indique le prénom et le nom."));
+      if (!form.reportValidity()) event.preventDefault();
+    });
+    update();
+  }
+</script>

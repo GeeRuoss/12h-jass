@@ -64,7 +64,11 @@ export const event = {
     glass: "Un verre à vin gravé est compris dans chaque inscription.",
   },
   registration: {
-    // Lien du formulaire (Google Forms), e-mail et téléphone d'inscription, prix par équipe ou par personne.
+    // Numéro WhatsApp du comité au format international sans « + » ni espaces, par exemple "41791234567".
+    // Tant qu'il est vide, WhatsApp s'ouvre avec le message prêt et laisse choisir le destinataire.
+    whatsapp: "",
+    whatsappIntro: "Bonjour ! Je souhaite inscrire une équipe aux 12 heures du Jass du samedi 6 mars 2027.",
+    // Moyens complémentaires, affichés seulement s'ils sont renseignés : formulaire (Google Forms), e-mail, téléphone. Prix par équipe ou par personne.
     form: "",
     email: "",
     phone: "",
@@ -108,3 +112,7 @@ export const nav = [
 ];
 
 export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
+
+// Lien WhatsApp avec message prérempli ; sans numéro, WhatsApp propose de choisir le contact.
+export const waLink = (number: string, text: string) =>
+  `https://wa.me/${number.replace(/\D/g, "")}?text=${encodeURIComponent(text)}`;

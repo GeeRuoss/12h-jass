@@ -4,7 +4,8 @@ import Badge from "../components/Badge.astro";
 import Suit from "../components/Suit.astro";
 import Arrow from "../components/Arrow.astro";
 import Glass from "../components/Glass.astro";
-import { event, telHref } from "../data/event";
+import Registration from "../components/Registration.astro";
+import { event } from "../data/event";
 
 const r = event.registration;
 const hasSponsors = event.sponsors.main.length + event.sponsors.partners.length > 0;
@@ -92,45 +93,11 @@ const tiers = [
   <!-- === INSCRIPTION === -->
   <section id="inscription" class="section container">
     <div class="sheet" data-reveal>
-      <h2>Par deux, pour tous.</h2>
-      <p class="lead">
-        Trouvez votre partenaire et inscrivez votre équipe par le formulaire, par e-mail ou par téléphone.
-      </p>
-      <div class="channels">
-        {r.form ? (
-          <a class="channel" href={r.form} target="_blank" rel="noopener noreferrer">
-            <span>Formulaire en ligne</span>
-            <strong>Remplir le formulaire <Arrow diagonal /></strong>
-          </a>
-        ) : (
-          <div class="channel channel--soon">
-            <span>Formulaire en ligne</span>
-            <strong>Lien à venir</strong>
-          </div>
-        )}
-        {r.email ? (
-          <a class="channel" href={`mailto:${r.email}`}>
-            <span>Par e-mail</span>
-            <strong>{r.email}</strong>
-          </a>
-        ) : (
-          <div class="channel channel--soon">
-            <span>Par e-mail</span>
-            <strong>Adresse à venir</strong>
-          </div>
-        )}
-        {r.phone ? (
-          <a class="channel" href={telHref(r.phone)}>
-            <span>Par téléphone</span>
-            <strong>{r.phone}</strong>
-          </a>
-        ) : (
-          <div class="channel channel--soon">
-            <span>Par téléphone</span>
-            <strong>Numéro à venir</strong>
-          </div>
-        )}
+      <div class="sheet-head">
+        <h2>Par deux, pour tous.</h2>
+        <p class="lead">Trouve ton partenaire, écris vos deux noms : le message s'écrit tout seul, tu l'envoies sur WhatsApp.</p>
       </div>
+      <Registration />
       <p class:list={["price", { "price--soon": !r.price }]}>
         <span>Prix d'inscription</span>
         <strong>{r.price || "Communiqué à l'ouverture des inscriptions"}</strong>
@@ -226,6 +193,6 @@ const tiers = [
   <!-- === RAPPEL FINAL === -->
   <section class="section container closing" data-reveal>
     <h2>Rendez-vous le {event.date.short}.</h2>
-    <a class="button" href="#inscription">S'inscrire <Arrow /></a>
+    <a class="button" href="#inscription">Inscrire mon équipe <Arrow /></a>
   </section>
 </Layout>
