@@ -1,0 +1,56 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Arrow from "../components/Arrow.astro";
+import { event, href } from "../data/event";
+const email = event.organizer.email || event.registration.email;
+---
+
+<Layout page="legal" title={`Mentions légales | ${event.name}`} description={`Mentions légales du site du tournoi ${event.name}.`}>
+  <section class="page-hero container">
+    <h1>Mentions légales</h1>
+  </section>
+  <section class="container prose">
+    <h2>Organisation</h2>
+    <p>
+      {event.organizer.name}, {event.venue.region}.{" "}
+      {email ? (
+        <>
+          Contact : <a href={`mailto:${email}`}>{email}</a>.
+        </>
+      ) : (
+        "Les coordonnées de contact seront publiées avec l'ouverture des inscriptions."
+      )}
+    </p>
+
+    <h2>Ce site</h2>
+    <p>
+      Ce site présente le tournoi {event.name} du {event.date.label} à l'{event.venue.name}, {event.venue.city}.
+      Il ne collecte aucune donnée personnelle et n'utilise ni cookies ni outil de mesure d'audience.
+      Les polices de caractères sont hébergées avec le site.
+    </p>
+
+    <h2>Inscriptions</h2>
+    <p>
+      Les inscriptions se font par un formulaire en ligne, par e-mail ou par téléphone. Les données transmises
+      servent uniquement à organiser le tournoi et ne sont pas communiquées à des tiers, conformément à la loi
+      fédérale sur la protection des données (LPD). Le formulaire en ligne est hébergé par Google (Google Forms)
+      et soumis à ses conditions d'utilisation.
+    </p>
+
+    <h2>Liens externes</h2>
+    <p>
+      Les liens vers les hôtels, Google Maps et le formulaire d'inscription mènent vers des sites tiers dont le
+      contenu n'engage pas l'organisateur.
+    </p>
+
+    <h2>Hébergement et crédits</h2>
+    <p>
+      Site hébergé par GitHub Pages (GitHub, Inc.). Logo : comité d'organisation. Design et développement :
+      <a href="https://www.ruosscommunication.com" target="_blank" rel="noopener noreferrer">Ruoss! Communication</a>, Verbier.
+    </p>
+
+    <p class="prose-back">
+      <a class="button button--ghost" href={href("")}>Retour à l'accueil <Arrow /></a>
+    </p>
+  </section>
+</Layout>

@@ -1,0 +1,173 @@
+---
+import "@fontsource-variable/archivo/wdth.css";
+import "../styles/style.css";
+import Mark from "../components/Mark.astro";
+import Arrow from "../components/Arrow.astro";
+import { event, nav, href, asset } from "../data/event";
+
+const { title, description, page = "home" } = Astro.props as {
+  title: string;
+  description: string;
+  page?: "home" | "legal" | "404";
+};
+const preview = import.meta.env.PUBLIC_PREVIEW !== "false";
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(asset("images/og-image.jpg"), Astro.site);
+const home = href("");
+const year = new Date().getFullYear();
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Event",
+  name: event.name,
+  description: event.description,
+  startDate: event.date.start,
+  endDate: event.date.end,
+  eventStatus: "https://schema.org/EventScheduled",
+  eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+  image: ogImage.href,
+  url: new URL(home, Astro.site).href,
+  location: {
+    "@type": "Place",
+    name: event.venue.name,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: event.venue.street,
+      postalCode: event.venue.zip,
+      addressLocality: event.venue.city,
+      addressCountry: "CH",
+    },
+  },
+  organizer: { "@type": "Organization", name: event.organizer.name },
+};
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f3eee4" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={page === "404" || preview ? "noindex, nofollow" : "index, follow"} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={asset("favicon.svg")} />
+    <link rel="apple-touch-icon" href={asset("apple-touch-icon.png")} />
+    <meta property="og:site_name" content={event.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="fr_CH" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {page === "home" && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Aller au contenu</a>
+
+    <!-- === NAVIGATION PARTAGÉE === -->
+    <header class="site-header">
+      <div class="container nav-inner">
+        <a class="brand" href={home} aria-label="Les 12 heures du Jass, accueil">
+          <Mark />
+          <span>Les 12 heures du Jass</span>
+        </a>
+        <nav class="desktop-nav" aria-label="Navigation principale">
+          {nav.map((item) => <a href={`${home}#${item.anchor}`}>{item.label}</a>)}
+        </nav>
+        <div class="header-actions">
+          <a class="button button--small header-cta" href={`${home}#inscription`}>S'inscrire</a>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-navigation">
+            <span class="menu-label">Menu</span>
+            <span class="menu-lines" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+    <nav id="mobile-navigation" class="mobile-nav" hidden aria-label="Navigation mobile">
+      {nav.map((item) => (
+        <a href={`${home}#${item.anchor}`}>
+          {item.label}
+          <Arrow />
+        </a>
+      ))}
+      <a class="button mobile-cta" href={`${home}#inscription`}>S'inscrire <Arrow /></a>
+    </nav>
+
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+
+    <!-- === PIED DE PAGE === -->
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <a class="footer-brand" href={home}>
+          <Mark />
+          <span>
+            {event.name}
+            <small>{event.date.label} · {event.venue.name}, {event.venue.city}</small>
+          </span>
+        </a>
+        <nav class="footer-nav" aria-label="Pied de page">
+          {nav.map((item) => <a href={`${home}#${item.anchor}`}>{item.label}</a>)}
+          <a href={href("mentions-legales/")}>Mentions légales</a>
+        </nav>
+      </div>
+      <div class="container footer-bottom">
+        <span>© {year} {event.organizer.name}</span>
+        <span>
+          Design : <a href="https://www.ruosscommunication.com" target="_blank" rel="noopener noreferrer">Ruoss! Communication</a>
+        </span>
+      </div>
+    </footer>
+
+    <script>
+      // === Navigation : ombre au défilement, menu mobile, fermeture clavier ===
+      const header = document.querySelector<HTMLElement>(".site-header");
+      const onScroll = () => header?.classList.toggle("is-scrolled", window.scrollY > 8);
+      onScroll();
+      window.addEventListener("scroll", onScroll, { passive: true });
+
+      const toggle = document.querySelector<HTMLButtonElement>(".menu-toggle");
+      const menu = document.getElementById("mobile-navigation");
+      const setMenu = (open: boolean) => {
+        if (!toggle || !menu) return;
+        toggle.setAttribute("aria-expanded", String(open));
+        menu.hidden = !open;
+        document.documentElement.classList.toggle("menu-open", open);
+        const label = toggle.querySelector(".menu-label");
+        if (label) label.textContent = open ? "Fermer" : "Menu";
+      };
+      toggle?.addEventListener("click", () => setMenu(toggle.getAttribute("aria-expanded") !== "true"));
+      menu?.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && toggle?.getAttribute("aria-expanded") === "true") {
+          setMenu(false);
+          toggle.focus();
+        }
+      });
+      window.matchMedia("(min-width: 1024px)").addEventListener("change", () => setMenu(false));
+
+      // === Apparition douce au défilement (le contenu reste visible sans JS) ===
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const observer = new IntersectionObserver(
+          (entries) =>
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            }),
+          { threshold: 0.08 },
+        );
+        document.querySelectorAll("[data-reveal]").forEach((el) => {
+          el.classList.add("will-reveal");
+          observer.observe(el);
+        });
+      }
+    </script>
+  </body>
+</html>

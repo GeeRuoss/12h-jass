@@ -1,0 +1,231 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Badge from "../components/Badge.astro";
+import Suit from "../components/Suit.astro";
+import Arrow from "../components/Arrow.astro";
+import Glass from "../components/Glass.astro";
+import { event, telHref } from "../data/event";
+
+const r = event.registration;
+const hasSponsors = event.sponsors.main.length + event.sponsors.partners.length > 0;
+const contactEmail = r.email || event.organizer.email;
+const tiers = [
+  { title: "Sponsors principaux", list: event.sponsors.main },
+  { title: "Partenaires", list: event.sponsors.partners },
+];
+---
+
+<Layout
+  page="home"
+  title={`${event.name} | Tournoi de jass, ${event.date.label}, Le Châble`}
+  description={event.description}
+>
+  <!-- === ACCUEIL === -->
+  <section class="hero container">
+    <div class="hero-grid">
+      <div class="hero-badge">
+        <Badge />
+      </div>
+      <div class="hero-copy">
+        <p class="hero-date">
+          <span>{event.date.label}</span>
+          <span>{event.venue.name}, {event.venue.city}</span>
+        </p>
+        <h1>Les 12 heures<br />du Jass</h1>
+        <p class="lead">
+          Un tournoi par équipes de deux, ouvert à tous les âges. Assez animé pour s'amuser,
+          assez sérieux pour ceux qui veulent jouer leur vie aux cartes.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="#inscription">S'inscrire <Arrow /></a>
+          <a class="button button--ghost" href="#programme">Le programme <Arrow down /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === PROGRAMME === -->
+  <section id="programme" class="section container">
+    <div class="programme-grid">
+      <div class="programme-head" data-reveal>
+        <h2>Le programme</h2>
+        <p class="lead">{event.date.label}, dès 7h15 à l'{event.venue.name}.</p>
+      </div>
+      <ol class="timeline" data-reveal>
+        {event.program.map((step) => (
+          <li>
+            <span class="t-time">
+              {step.time}
+              {step.until && <small>à {step.until}</small>}
+            </span>
+            <div>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- === LOTS === -->
+  <section id="lots" class="section container">
+    <div class="section-head" data-reveal>
+      <h2>De jolis lots à gagner.</h2>
+      <p class="lead">{event.prizes.intro}</p>
+    </div>
+    <ul class="cards" data-reveal>
+      {event.prizes.items.map((item) => (
+        <li class:list={["card", { "card--featured": item.featured }]}>
+          <Suit suit={item.suit as any} class="suit suit--tl" />
+          <h3>{item.name}</h3>
+          <Suit suit={item.suit as any} class="suit suit--br" />
+        </li>
+      ))}
+    </ul>
+    <p class="glass" data-reveal>
+      <Glass />
+      <span>{event.prizes.glass}</span>
+    </p>
+  </section>
+
+  <!-- === INSCRIPTION === -->
+  <section id="inscription" class="section container">
+    <div class="sheet" data-reveal>
+      <h2>Par deux, pour tous.</h2>
+      <p class="lead">
+        Trouvez votre partenaire et inscrivez votre équipe par le formulaire, par e-mail ou par téléphone.
+      </p>
+      <div class="channels">
+        {r.form ? (
+          <a class="channel" href={r.form} target="_blank" rel="noopener noreferrer">
+            <span>Formulaire en ligne</span>
+            <strong>Remplir le formulaire <Arrow diagonal /></strong>
+          </a>
+        ) : (
+          <div class="channel channel--soon">
+            <span>Formulaire en ligne</span>
+            <strong>Lien à venir</strong>
+          </div>
+        )}
+        {r.email ? (
+          <a class="channel" href={`mailto:${r.email}`}>
+            <span>Par e-mail</span>
+            <strong>{r.email}</strong>
+          </a>
+        ) : (
+          <div class="channel channel--soon">
+            <span>Par e-mail</span>
+            <strong>Adresse à venir</strong>
+          </div>
+        )}
+        {r.phone ? (
+          <a class="channel" href={telHref(r.phone)}>
+            <span>Par téléphone</span>
+            <strong>{r.phone}</strong>
+          </a>
+        ) : (
+          <div class="channel channel--soon">
+            <span>Par téléphone</span>
+            <strong>Numéro à venir</strong>
+          </div>
+        )}
+      </div>
+      <p class:list={["price", { "price--soon": !r.price }]}>
+        <span>Prix d'inscription</span>
+        <strong>{r.price || "Communiqué à l'ouverture des inscriptions"}</strong>
+      </p>
+    </div>
+  </section>
+
+  <!-- === ACCÈS === -->
+  <section id="acces" class="section container">
+    <div class="access-grid">
+      <div class="address" data-reveal>
+        <h2>Venir au Châble.</h2>
+        <p class="address-lines">
+          {event.venue.name}
+          <span>
+            {event.venue.street}<br />
+            {event.venue.zip} {event.venue.city}, {event.venue.region}
+          </span>
+        </p>
+        <p>
+          <a class="button button--ghost" href={event.venue.maps} target="_blank" rel="noopener noreferrer">
+            Ouvrir dans Google Maps <Arrow diagonal />
+          </a>
+        </p>
+      </div>
+      <div class="ways" data-reveal>
+        <div class="way">
+          <h3>En train</h3>
+          <p>
+            Train direct depuis Martigny (ligne du St-Bernard Express), 25 minutes jusqu'à la gare du Châble.
+            La salle est à une dizaine de minutes à pied de la gare.
+          </p>
+        </div>
+        <div class="way">
+          <h3>En voiture</h3>
+          <p>Depuis Martigny, direction Sembrancher puis Le Châble et Verbier. Grand parking devant la salle.</p>
+        </div>
+        <div class="way">
+          <h3>Dormir sur place</h3>
+          <p>Deux hôtels sympas à quelques minutes de la salle.</p>
+          <ul>
+            {event.hotels.map((hotel) => (
+              <li>
+                <a href={hotel.url} target="_blank" rel="noopener noreferrer">{hotel.name}</a> · {hotel.note}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === SPONSORS === -->
+  <section id="sponsors" class="section container">
+    <div class="section-head" data-reveal>
+      <h2>Ils soutiennent le tournoi.</h2>
+      <p class="lead">
+        {hasSponsors
+          ? "Merci à nos sponsors et partenaires. Sans eux, pas de lots et pas de fête."
+          : "Les sponsors principaux et les partenaires du tournoi seront présentés ici."}
+      </p>
+    </div>
+    {tiers.map(
+      (tier) =>
+        tier.list.length > 0 && (
+          <div class="sponsor-tier" data-reveal>
+            <h3>{tier.title}</h3>
+            <ul class="logos">
+              {tier.list.map((s) => (
+                <li>
+                  {s.url ? (
+                    <a class="logo-tile" href={s.url} target="_blank" rel="noopener noreferrer">
+                      {s.logo ? <img src={s.logo} alt={s.name} loading="lazy" /> : s.name}
+                    </a>
+                  ) : (
+                    <div class="logo-tile">{s.logo ? <img src={s.logo} alt={s.name} loading="lazy" /> : s.name}</div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ),
+    )}
+    {contactEmail && (
+      <p class="sponsor-cta" data-reveal>
+        <a class="button button--ghost" href={`mailto:${contactEmail}?subject=Sponsoring des 12 heures du Jass`}>
+          Devenir sponsor <Arrow diagonal />
+        </a>
+      </p>
+    )}
+  </section>
+
+  <!-- === RAPPEL FINAL === -->
+  <section class="section container closing" data-reveal>
+    <h2>Rendez-vous le {event.date.short}.</h2>
+    <a class="button" href="#inscription">S'inscrire <Arrow /></a>
+  </section>
+</Layout>

@@ -1,0 +1,13 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Arrow from "../components/Arrow.astro";
+import { event, href } from "../data/event";
+---
+
+<Layout page="404" title={`Page introuvable | ${event.name}`} description="Cette page n'existe pas.">
+  <section class="container not-found">
+    <h1>Mauvaise donne.</h1>
+    <p class="lead">Cette page n'existe pas. On redistribue et on retourne à la table.</p>
+    <a class="button" href={href("")}>Retour à l'accueil <Arrow /></a>
+  </section>
+</Layout>

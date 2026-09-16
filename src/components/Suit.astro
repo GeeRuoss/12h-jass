@@ -1,0 +1,19 @@
+---
+// Enseignes de cartes (cœur, pique, carreau, trèfle) : icônes pleines, couleur héritée.
+type SuitName = "heart" | "spade" | "diamond" | "club";
+const { suit = "heart", class: className = "" } = Astro.props as { suit?: SuitName; class?: string };
+const red = suit === "heart" || suit === "diamond";
+---
+<svg class:list={[className, { "suit--red": red }]} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+  {suit === "heart" && <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />}
+  {suit === "spade" && <path d="M12 2c-2.6 3.6-8 7.2-8 11.3A4.2 4.2 0 0 0 11 16.4c-.2 2-1 3.7-2.7 4.8h7.4c-1.7-1.1-2.5-2.8-2.7-4.8A4.2 4.2 0 0 0 20 13.3C20 9.2 14.6 5.6 12 2z" />}
+  {suit === "diamond" && <path d="M12 2c2.2 3.7 5 7 8 10-3 3-5.8 6.3-8 10-2.2-3.7-5-7-8-10 3-3 5.8-6.3 8-10z" />}
+  {suit === "club" && (
+    <>
+      <circle cx="12" cy="7" r="4.3" />
+      <circle cx="7.2" cy="13.4" r="4.3" />
+      <circle cx="16.8" cy="13.4" r="4.3" />
+      <path d="M10.7 13.5c-.3 3-1.1 5-2.6 6.2h7.8c-1.5-1.2-2.3-3.2-2.6-6.2z" />
+    </>
+  )}
+</svg>
