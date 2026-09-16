@@ -52,14 +52,19 @@ const email = event.organizer.email || event.registration.email;
 
     <h2>Crédits photos</h2>
     <p>
-      Les photographies du val de Bagnes proviennent de Wikimedia Commons et sont utilisées sous licence Creative
-      Commons. Elles ont été recadrées, réduites et converties en WebP ; ces versions restent sous la même licence.
+      Les photographies ont été réduites et converties en WebP ; celles sous licence Creative Commons restent sous
+      la même licence.
     </p>
     <ul class="credits">
       {Object.values(photos).map((photo) => (
         <li>
-          <a href={photo.source} target="_blank" rel="noopener noreferrer">{photo.title}</a> par {photo.author},{" "}
-          <a href={photo.licenseUrl} target="_blank" rel="noopener noreferrer">{photo.license}</a> ({photo.changes}).
+          <a href={photo.source} target="_blank" rel="noopener noreferrer">{photo.title}</a>, photo : {photo.author},{" "}
+          {photo.licenseUrl ? (
+            <a href={photo.licenseUrl} target="_blank" rel="noopener noreferrer">{photo.license}</a>
+          ) : (
+            photo.license
+          )}{" "}
+          ({photo.changes}).
         </li>
       ))}
     </ul>
