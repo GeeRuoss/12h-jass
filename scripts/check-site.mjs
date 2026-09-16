@@ -13,7 +13,7 @@ const expected = [
   "favicon.svg",
   "apple-touch-icon.png",
   "logo.svg",
-  "images/og-image.jpg",
+  JSON.parse(readFileSync("src/data/og.json", "utf8")).file,
 ];
 const errors = [];
 

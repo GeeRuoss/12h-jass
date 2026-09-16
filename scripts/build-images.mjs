@@ -1,6 +1,7 @@
 // Génère l'image de partage 1200 × 630 (public/images/og-image.jpg) avec Google Chrome sans interface.
 import { execFileSync } from "node:child_process";
-import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync, existsSync, readdirSync, unlinkSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { resolve } from "node:path";
 
 const chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
@@ -27,5 +28,13 @@ execFileSync(chrome, [
   `--screenshot=${png}`, "--window-size=1200,630", `file://${resolve("tmp/og.html")}`,
 ], { stdio: "ignore" });
 // Conversion PNG → JPG avec sips (macOS), qualité élevée.
-execFileSync("sips", ["-s", "format", "jpeg", "-s", "formatOptions", "90", png, "--out", resolve("public/images/og-image.jpg")], { stdio: "ignore" });
-console.log(existsSync("public/images/og-image.jpg") ? "og-image.jpg généré" : "échec");
+const tmpJpg = resolve("tmp/og.jpg");
+execFileSync("sips", ["-s", "format", "jpeg", "-s", "formatOptions", "90", png, "--out", tmpJpg], { stdio: "ignore" });
+// Nom de fichier avec empreinte : WhatsApp et les réseaux gardent en cache l'ancienne image tant que l'adresse ne change pas.
+const jpg = readFileSync(tmpJpg);
+const hash = createHash("md5").update(jpg).digest("hex").slice(0, 8);
+for (const old of readdirSync("public/images")) if (/^og-image.*\.jpg$/.test(old)) unlinkSync(`public/images/${old}`);
+const file = `images/og-image-${hash}.jpg`;
+writeFileSync(`public/${file}`, jpg);
+writeFileSync("src/data/og.json", JSON.stringify({ file }, null, 2) + "\n");
+console.log(`${file} généré`);

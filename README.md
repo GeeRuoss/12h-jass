@@ -28,7 +28,7 @@ npm run check
 npm run images
 ```
 
-`npm run images` régénère l'image de partage (`public/images/og-image.jpg`) avec Google Chrome.
+`npm run images` régénère l'image de partage avec Google Chrome, sous un nom horodaté par empreinte (`public/images/og-image-xxxxxxxx.jpg`, référencé dans `src/data/og.json`) pour que WhatsApp et les réseaux rechargent la nouvelle miniature.
 `scripts/build-brand.py` régénère les composants de logo et le favicon depuis `brand/logo-original.svg`.
 
 ## Structure
