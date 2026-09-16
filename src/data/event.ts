@@ -66,12 +66,12 @@ export const event = {
   registration: {
     // Numéro WhatsApp du comité au format international sans « + » ni espaces, par exemple "41791234567".
     // Tant qu'il est vide, WhatsApp s'ouvre avec le message prêt et laisse choisir le destinataire.
-    whatsapp: "",
+    whatsapp: "41793788938",
     whatsappIntro: "Bonjour ! Je souhaite inscrire une équipe aux 12 heures du Jass du samedi 6 mars 2027.",
     // Moyens complémentaires, affichés seulement s'ils sont renseignés : formulaire (Google Forms), e-mail, téléphone. Prix par équipe ou par personne.
     form: "",
     email: "",
-    phone: "",
+    phone: "+41 79 378 89 38",
     price: "",
   },
   sponsors: {

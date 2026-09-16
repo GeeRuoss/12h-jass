@@ -5,7 +5,7 @@ paths = re.findall(r'<path\b[^>]*?\bd="([^"]+)"', src)
 assert len(paths) >= 4, len(paths)
 outer, heart, foot, ring = paths[0], paths[1], paths[2], paths[3]
 letters = paths[4:]
-ink, red = "#141210", "#E42C32"
+ink, red = "#141210", "#A51324"
 
 def mark(fill_ink, fill_red):
     return (f'<path d="{outer}" fill="{fill_ink}"/>\n'
@@ -13,7 +13,7 @@ def mark(fill_ink, fill_red):
             f'<path d="{foot}" fill="{fill_ink}"/>')
 
 def badge(fill_ink, fill_red):
-    body = mark(fill_ink, fill_red) + f'\n<path d="{ring}" fill="{fill_ink}"/>\n'
+    body = mark(fill_ink, fill_red) + f'\n<path d="{ring}" fill="{fill_red}"/>\n'
     body += "\n".join(f'<path d="{d}" fill="{fill_ink}"/>' for d in letters)
     return body
 
