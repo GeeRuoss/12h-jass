@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Arrow from "../components/Arrow.astro";
 import { event, href } from "../data/event";
+import { photos } from "../data/photos";
 const email = event.organizer.email || event.registration.email;
 ---
 
@@ -48,6 +49,20 @@ const email = event.organizer.email || event.registration.email;
       Site hébergé par GitHub Pages (GitHub, Inc.). Logo : comité d'organisation. Design et développement :
       <a href="https://www.ruosscommunication.com" target="_blank" rel="noopener noreferrer">Ruoss! Communication</a>, Verbier.
     </p>
+
+    <h2>Crédits photos</h2>
+    <p>
+      Les photographies du val de Bagnes proviennent de Wikimedia Commons et sont utilisées sous licence Creative
+      Commons. Elles ont été recadrées, réduites et converties en WebP ; ces versions restent sous la même licence.
+    </p>
+    <ul class="credits">
+      {Object.values(photos).map((photo) => (
+        <li>
+          <a href={photo.source} target="_blank" rel="noopener noreferrer">{photo.title}</a> par {photo.author},{" "}
+          <a href={photo.licenseUrl} target="_blank" rel="noopener noreferrer">{photo.license}</a> ({photo.changes}).
+        </li>
+      ))}
+    </ul>
 
     <p class="prose-back">
       <a class="button button--ghost" href={href("")}>Retour à l'accueil <Arrow /></a>

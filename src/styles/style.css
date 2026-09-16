@@ -414,6 +414,32 @@ strong {
   }
 }
 
+/* === PHOTOS === */
+.photo {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: var(--r-card);
+  background: rgba(20, 18, 16, 0.06);
+}
+.hero-photo {
+  aspect-ratio: 3 / 2;
+  border-radius: var(--r-sheet);
+}
+.programme-photo {
+  margin-top: 0.5rem;
+  aspect-ratio: 4 / 3;
+}
+.access-photo {
+  margin-top: 0.5rem;
+  aspect-ratio: 4 / 3;
+}
+@media (min-width: 768px) {
+  .hero-photo {
+    aspect-ratio: 21 / 9;
+  }
+}
+
 /* === PROGRAMME === */
 .programme-grid {
   display: grid;
@@ -949,6 +975,11 @@ a.logo-tile:hover {
 }
 .prose-back {
   margin-top: 2rem;
+}
+.credits {
+  display: grid;
+  gap: 0.5rem;
+  padding-left: 1.2rem;
 }
 .not-found {
   display: grid;

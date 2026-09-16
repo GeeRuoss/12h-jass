@@ -5,6 +5,7 @@ import Suit from "../components/Suit.astro";
 import Arrow from "../components/Arrow.astro";
 import Glass from "../components/Glass.astro";
 import Registration from "../components/Registration.astro";
+import Photo from "../components/Photo.astro";
 import { event } from "../data/event";
 
 const r = event.registration;
@@ -45,12 +46,17 @@ const tiers = [
     </div>
   </section>
 
+  <div class="container">
+    <Photo id="bruson" class="hero-photo" eager sizes="(min-width: 1440px) 1320px, 92vw" />
+  </div>
+
   <!-- === PROGRAMME === -->
   <section id="programme" class="section container">
     <div class="programme-grid">
       <div class="programme-head" data-reveal>
         <h2>Le programme</h2>
         <p class="lead">{event.date.label}, dès 7h15 à l'{event.venue.name}.</p>
+        <Photo id="nuit" class="programme-photo" sizes="(min-width: 1024px) 34vw, 92vw" />
       </div>
       <ol class="timeline" data-reveal>
         {event.program.map((step) => (
@@ -122,6 +128,7 @@ const tiers = [
             Ouvrir dans Google Maps <Arrow diagonal />
           </a>
         </p>
+        <Photo id="chable" class="access-photo" sizes="(min-width: 1024px) 44vw, 92vw" />
       </div>
       <div class="ways" data-reveal>
         <div class="way">

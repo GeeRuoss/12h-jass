@@ -1,0 +1,27 @@
+---
+// Photo responsive (WebP, plusieurs largeurs) à partir du registre src/data/photos.ts.
+import { photos, type PhotoId } from "../data/photos";
+import { asset } from "../data/event";
+const { id, sizes = "100vw", eager = false, class: className = "" } = Astro.props as {
+  id: PhotoId;
+  sizes?: string;
+  eager?: boolean;
+  class?: string;
+};
+const photo = photos[id];
+const largest = photo.widths[0];
+const srcset = photo.widths.map((w) => `${asset(`images/${id}-${w}.webp`)} ${w}w`).join(", ");
+---
+
+<img
+  class:list={["photo", className]}
+  src={asset(`images/${id}-${largest}.webp`)}
+  srcset={srcset}
+  sizes={sizes}
+  width={largest}
+  height={Math.round(largest / photo.ratio)}
+  alt={photo.alt}
+  loading={eager ? "eager" : "lazy"}
+  decoding="async"
+  fetchpriority={eager ? "high" : undefined}
+/>
