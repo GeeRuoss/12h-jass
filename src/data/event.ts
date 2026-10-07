@@ -6,7 +6,7 @@ export const event = {
   name: "Les 12 heures du Jass",
   shortName: "12 heures du Jass",
   description:
-    "Tournoi de jass par équipes de deux, ouvert à tous, le samedi 6 mars 2027 à l'Espace Saint-Marc du Châble. Café-croissant, repas, raclette et soirée avec les Magic Men.",
+    "Tournoi de jass par équipes de deux, ouvert à tous les âges et tous les niveaux, le samedi 6 mars 2027 à l'Espace Saint-Marc du Châble. Café-croissant, repas, raclette et soirée animée par les Magic Men, ouverte à tous et gratuite.",
   date: {
     iso: "2027-03-06",
     start: "2027-03-06T07:15:00+01:00",
@@ -35,12 +35,12 @@ export const event = {
     },
     {
       time: "13h",
-      until: "15h",
+      until: "14h30",
       title: "Repas de midi",
-      text: "Pause repas sur place, le temps de refaire les parties du matin.",
+      text: "Pâtes sur place, sauce au choix, le temps de refaire les parties du matin.",
     },
     {
-      time: "15h",
+      time: "14h30",
       until: "21h",
       title: "Reprise des matchs",
       text: "Les cartes reprennent jusqu'au soir.",
@@ -48,35 +48,58 @@ export const event = {
     {
       time: "21h",
       until: "minuit",
-      title: "Raclette, apéro et baloche",
-      text: "Soirée animée par les Magic Men. Détente jusqu'à minuit.",
+      title: "Soirée avec les Magic Men",
+      text: "Raclette, apéro et baloche. Ouverte à tous, joueurs ou non, entrée libre.",
     },
   ],
+  // Soirée mise en avant sur la page : ouverte à tout le monde, même sans avoir joué.
+  evening: {
+    time: "Dès 21h",
+    band: "Les Magic Men",
+    title: "Le soir, tout le monde est invité.",
+    text: "Dès 21h, les Magic Men animent la soirée : raclette, apéro et baloche jusqu'à minuit. Pas besoin d'avoir joué, l'entrée est gratuite.",
+    facts: ["Dès 21h", "Ouvert à tous", "Entrée gratuite"],
+  },
   prizes: {
     intro:
-      "Un e-bike, une paire de skis, un abonnement TV et d'autres surprises, en préparation avec nos sponsors.",
+      "Et si vous gagniez une paire de skis ? Ou un cochon détaillé, emballé et sous vide ? Repartirez-vous avec une nuit d'hôtel tout confort ou 150 kg de patates ? Restez attentifs, l'annonce des lots définitifs arrive bientôt !",
     items: [
-      { name: "E-bike", suit: "heart" },
-      { name: "Skis", suit: "spade" },
-      { name: "Abonnement TV", suit: "diamond" },
-      { name: "Et bien d'autres lots", suit: "club", featured: true },
+      { name: "Une paire de skis ?", suit: "spade" },
+      { name: "Un cochon ?", suit: "heart" },
+      { name: "Une nuit d'hôtel ?", suit: "club" },
+      { name: "150 kg de patates ?", suit: "diamond", featured: true },
     ],
-    glass: "Un verre à vin gravé est compris dans chaque inscription.",
   },
   registration: {
-    // Numéro WhatsApp du comité au format international sans « + » ni espaces, par exemple "41791234567".
-    // Tant qu'il est vide, WhatsApp s'ouvre avec le message prêt et laisse choisir le destinataire.
-    whatsapp: "41793788938",
+    // Numéro WhatsApp des inscriptions au format international sans « + » ni espaces (079 572 97 03, reçu le 06/10/2026).
+    whatsapp: "41795729703",
     whatsappIntro: "Bonjour ! Je souhaite inscrire une équipe aux 12 heures du Jass du samedi 6 mars 2027.",
-    // Moyens complémentaires, affichés seulement s'ils sont renseignés : formulaire (Google Forms), e-mail, téléphone. Prix par équipe ou par personne.
+    // Les mêmes inscriptions par e-mail ou par téléphone. Le formulaire en ligne reste possible plus tard (lien vide = masqué).
     form: "",
-    email: "",
-    phone: "+41 79 378 89 38",
-    price: "",
+    email: "loicvaudan@gmail.com",
+    phone: "079 572 97 03",
+    // Sauce des pâtes de midi, à choisir pour chaque joueur.
+    sauces: ["Bolo", "Carbo", "Pesto"],
+    price: { person: "75.-", team: "150.-" },
+    included: "Un verre à vin gravé par personne et une bouteille par équipe sont compris dans l'inscription.",
+    onSite: "Pas d'inscription ni de paiement sur place.",
+    // Paiement : TWINT et bulletin de versement. Quand la banque aura tout préparé, poser le QR TWINT
+    // dans public/images/ (par exemple "images/twint.png") et le bulletin en PDF dans public/ (par exemple "bulletin-versement.pdf").
+    payment: {
+      text: "Paiement par TWINT ou par bulletin de versement, à réception de la confirmation.",
+      twintQr: "",
+      slip: "",
+    },
   },
   sponsors: {
     // { name: "Nom", url: "https://…", logo: "images/sponsors/nom.svg" } : le logo est facultatif.
-    main: [] as Sponsor[],
+    main: [
+      {
+        name: "Ruoss Communication",
+        url: "https://www.ruosscommunication.com",
+        logo: "images/sponsors/ruoss-communication.svg",
+      },
+    ] as Sponsor[],
     partners: [] as Sponsor[],
   },
   hotels: [
@@ -105,13 +128,22 @@ export const href = (path = "") => `${base}/${path}`;
 
 export const nav = [
   { label: "Programme", anchor: "programme" },
+  { label: "Soirée", anchor: "soiree" },
   { label: "Lots", anchor: "lots" },
   { label: "Inscription", anchor: "inscription" },
   { label: "Accès", anchor: "acces" },
   { label: "Sponsors", anchor: "sponsors" },
 ];
 
-export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
+// Numéro suisse au format 079 … converti en lien tel:+4179…
+export const telHref = (phone: string) => {
+  const digits = phone.replace(/[^\d+]/g, "");
+  return `tel:${digits.startsWith("0") ? "+41" + digits.slice(1) : digits}`;
+};
+
+// Lien e-mail avec sujet et message préremplis.
+export const mailLink = (email: string, subject: string, body: string) =>
+  `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
 // Lien WhatsApp avec message prérempli ; sans numéro, WhatsApp propose de choisir le contact.
 export const waLink = (number: string, text: string) =>

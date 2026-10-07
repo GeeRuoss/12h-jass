@@ -1,6 +1,7 @@
 # Dépendances et sorties de build
 node_modules/
 dist/
+build/
 .astro/
 
 # Fichiers de travail
@@ -13,6 +14,7 @@ output/
 # Secrets : jamais versionnés
 .env
 .env.*
+*.env
 secrets*
 config.php
 credentials.json

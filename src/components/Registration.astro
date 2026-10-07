@@ -1,33 +1,52 @@
 ---
-// Inscription dans la page : le message WhatsApp s'écrit en direct, le visiteur l'envoie lui-même.
+// Inscription dans la page : le message s'écrit en direct, le visiteur l'envoie lui-même sur WhatsApp ou par e-mail.
 import Arrow from "./Arrow.astro";
 import WhatsAppIcon from "./WhatsAppIcon.astro";
-import { event, waLink, telHref } from "../data/event";
+import { event, waLink, mailLink, telHref } from "../data/event";
 const r = event.registration;
-const fallback = waLink(r.whatsapp, r.whatsappIntro);
-const others = [
-  r.form && { label: "Formulaire en ligne", href: r.form, external: true },
-  r.email && { label: r.email, href: `mailto:${r.email}` },
-  r.phone && { label: r.phone, href: telHref(r.phone) },
-].filter(Boolean) as { label: string; href: string; external?: boolean }[];
+const label = `${event.shortName} du ${event.date.label.toLowerCase()}`;
+const subject = `Inscription aux ${label}`;
+const fallbackWa = waLink(r.whatsapp, r.whatsappIntro);
+const fallbackMail = r.email ? mailLink(r.email, subject, r.whatsappIntro) : "";
+const players = [
+  { id: "1", label: "Joueur 1" },
+  { id: "2", label: "Joueur 2" },
+];
 ---
 
 <form
   class="signup"
   id="signup"
   data-whatsapp={r.whatsapp}
-  data-event={`${event.shortName} du ${event.date.label.toLowerCase()}`}
+  data-email={r.email}
+  data-subject={subject}
+  data-event={label}
   novalidate
 >
   <div class="signup-fields">
-    <div class="field">
-      <label for="player1">Joueur 1</label>
-      <input id="player1" name="player1" required maxlength="80" autocomplete="name" placeholder="Prénom et nom" />
-    </div>
-    <div class="field">
-      <label for="player2">Joueur 2</label>
-      <input id="player2" name="player2" required maxlength="80" placeholder="Prénom et nom" />
-    </div>
+    {players.map((p) => (
+      <div class="player" data-player={p.id}>
+        <div class="field">
+          <label for={`player${p.id}`}>{p.label}</label>
+          <input id={`player${p.id}`} name={`player${p.id}`} required maxlength="80" autocomplete={p.id === "1" ? "name" : "off"} placeholder="Prénom et nom" />
+        </div>
+        <fieldset class="field sauces">
+          <legend>Sauce des pâtes de midi</legend>
+          <div class="pills">
+            {r.sauces.map((sauce) => (
+              <label class="pill">
+                <input type="radio" name={`sauce${p.id}`} value={sauce} required />
+                <span>{sauce}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      </div>
+    ))}
+    <label class="check">
+      <input type="checkbox" id="solo" name="solo" />
+      <span>Je m'inscris seul, le comité me trouve un partenaire.</span>
+    </label>
     <div class="field">
       <label for="team">Nom d'équipe <span>facultatif</span></label>
       <input id="team" name="team" maxlength="60" placeholder="Les As de Bruson" />
@@ -40,68 +59,94 @@ const others = [
   <div class="signup-side">
     <p class="signup-preview-label">Ton message</p>
     <p class="signup-message" id="signup-message" aria-live="polite"></p>
-    <a class="button button--whatsapp" id="signup-send" href={fallback} target="_blank" rel="noopener noreferrer">
+    <a class="button button--whatsapp" id="signup-send" href={fallbackWa} target="_blank" rel="noopener noreferrer">
       <WhatsAppIcon />
       Envoyer sur WhatsApp
       <Arrow diagonal />
     </a>
-    <p class="signup-help">
-      {r.whatsapp
-        ? "Le message s'ouvre dans WhatsApp. Relis-le, envoie-le, le comité confirme ton inscription."
-        : "Le message s'ouvre dans WhatsApp, à envoyer au comité. Numéro du comité à venir."}
+    <p class="signup-others">
+      {r.email && (
+        <>
+          Ou par e-mail à <a id="signup-mail" href={fallbackMail}>{r.email}</a>
+        </>
+      )}
+      {r.email && r.phone && ", ou par téléphone au "}
+      {!r.email && r.phone && "Ou par téléphone au "}
+      {r.phone && <a href={telHref(r.phone)}>{r.phone}</a>}
+      {(r.email || r.phone) && "."}
     </p>
-    {others.length > 0 && (
-      <p class="signup-others">
-        Aussi par{" "}
-        {others.map((o, i) => (
-          <>
-            {i > 0 && ", "}
-            <a href={o.href} target={o.external ? "_blank" : undefined} rel={o.external ? "noopener noreferrer" : undefined}>{o.label}</a>
-          </>
-        ))}
-      </p>
-    )}
+    <p class="signup-help">
+      Relis le message, envoie-le : le comité confirme ton inscription et t'indique comment payer.
+    </p>
   </div>
   <noscript>
     <p class="signup-help">
-      Pour t'inscrire, envoie les noms des deux joueurs au comité sur{" "}
-      <a href={fallback}>WhatsApp</a>.
+      Pour t'inscrire, envoie les noms des deux joueurs et la sauce choisie au comité sur{" "}
+      <a href={fallbackWa}>WhatsApp</a>{r.email && <> ou par <a href={fallbackMail}>e-mail</a></>}.
     </p>
   </noscript>
 </form>
 
 <script>
-  // === Inscription : message WhatsApp composé en direct, validé avant l'ouverture ===
+  // === Inscription : message composé en direct, validé avant l'ouverture de WhatsApp ou de l'e-mail ===
   const form = document.getElementById("signup") as HTMLFormElement | null;
   if (form) {
     const number = (form.dataset.whatsapp || "").replace(/\D/g, "");
+    const email = form.dataset.email || "";
+    const subject = form.dataset.subject || "Inscription";
     const label = form.dataset.event || "12 heures du Jass";
     const field = (id: string) => document.getElementById(id) as HTMLInputElement;
-    const player1 = field("player1"), player2 = field("player2"), team = field("team"), note = field("note");
+    const player1 = field("player1"), player2 = field("player2"), team = field("team"), note = field("note"), solo = field("solo");
+    const player2Block = form.querySelector<HTMLElement>('[data-player="2"]')!;
     const preview = document.getElementById("signup-message")!;
     const send = document.getElementById("signup-send") as HTMLAnchorElement;
+    const mail = document.getElementById("signup-mail") as HTMLAnchorElement | null;
     const value = (input: HTMLInputElement) => input.value.trim();
+    const sauce = (id: string) => (form.querySelector(`input[name="sauce${id}"]:checked`) as HTMLInputElement | null)?.value || "";
+    const sauces = (id: string) => form.querySelectorAll<HTMLInputElement>(`input[name="sauce${id}"]`);
+    const line = (who: string, input: HTMLInputElement, id: string) =>
+      `${who} : ${value(input) || "…"} (pâtes : ${sauce(id) || "…"})`;
     const build = () =>
       [
-        `Bonjour ! On s'inscrit aux ${label}.`,
-        value(team) && `Équipe : ${value(team)}`,
-        `Joueur 1 : ${value(player1) || "…"}`,
-        `Joueur 2 : ${value(player2) || "…"}`,
+        solo.checked
+          ? `Bonjour ! Je m'inscris seul aux ${label} et je cherche un partenaire.`
+          : `Bonjour ! On s'inscrit aux ${label}.`,
+        !solo.checked && value(team) && `Équipe : ${value(team)}`,
+        line(solo.checked ? "Joueur" : "Joueur 1", player1, "1"),
+        !solo.checked && line("Joueur 2", player2, "2"),
         value(note) && `Précision : ${value(note)}`,
         "Merci !",
       ]
         .filter(Boolean)
         .join("\n");
     const update = () => {
+      form.querySelectorAll<HTMLInputElement>("input").forEach((input) => input.setCustomValidity(""));
+      player2Block.hidden = solo.checked;
+      player2.required = !solo.checked;
+      player2.disabled = solo.checked;
+      sauces("2").forEach((input) => {
+        input.required = !solo.checked;
+        input.disabled = solo.checked;
+      });
       const text = build();
       preview.textContent = text;
       send.href = `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+      if (mail) mail.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
+    };
+    const validate = (event: Event) => {
+      const required = solo.checked ? [player1] : [player1, player2];
+      [player1, player2].forEach((input) => input.setCustomValidity(""));
+      required.forEach((input) => input.setCustomValidity(value(input) ? "" : "Indique le prénom et le nom."));
+      (solo.checked ? ["1"] : ["1", "2"]).forEach((id) => {
+        const first = sauces(id)[0];
+        first?.setCustomValidity(sauce(id) ? "" : "Choisis la sauce des pâtes.");
+      });
+      if (!form.reportValidity()) event.preventDefault();
     };
     form.addEventListener("input", update);
-    send.addEventListener("click", (event) => {
-      [player1, player2].forEach((input) => input.setCustomValidity(value(input) ? "" : "Indique le prénom et le nom."));
-      if (!form.reportValidity()) event.preventDefault();
-    });
+    form.addEventListener("change", update);
+    send.addEventListener("click", validate);
+    mail?.addEventListener("click", validate);
     update();
   }
 </script>

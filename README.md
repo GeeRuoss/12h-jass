@@ -7,14 +7,13 @@ Astro génère des pages HTML/CSS/JS statiques, publiées sur GitHub Pages.
 
 Tout se règle dans un seul fichier : `src/data/event.ts`.
 
-- `registration.form` : lien du formulaire d'inscription (Google Forms).
-- `registration.email` et `registration.phone` : e-mail et téléphone d'inscription.
-- `registration.price` : prix d'inscription, par exemple `"CHF 80 par équipe"`.
+- `registration.payment.twintQr` : chemin du QR TWINT dans `public/`.
+- `registration.payment.slip` : chemin du bulletin de versement PDF dans `public/`.
 - `sponsors.main` et `sponsors.partners` : nom, lien et logo (fichier dans `public/images/sponsors/`).
 - `organizer.email` : contact du comité (mentions légales, bouton « Devenir sponsor »).
 - `prizes.items` : liste définitive des lots.
 
-Tant qu'un champ est vide, le site affiche « à venir » à sa place.
+Les inscriptions sont ouvertes par WhatsApp, e-mail ou téléphone, seul ou en équipe, avec le choix de sauce pour chaque joueur. Prix confirmés : 75 CHF par personne, 150 CHF par équipe. Le QR TWINT et le bulletin restent annoncés « bientôt ici » tant que les fichiers n'ont pas été fournis.
 
 ## Développement
 

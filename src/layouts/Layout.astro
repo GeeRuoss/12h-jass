@@ -40,6 +40,13 @@ const jsonLd = {
     },
   },
   organizer: { "@type": "Organization", name: event.organizer.name },
+  offers: {
+    "@type": "Offer",
+    price: "75",
+    priceCurrency: "CHF",
+    availability: "https://schema.org/InStock",
+    url: new URL(`${home}#inscription`, Astro.site).href,
+  },
 };
 ---
 

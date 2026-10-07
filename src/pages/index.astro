@@ -6,7 +6,7 @@ import Arrow from "../components/Arrow.astro";
 import Glass from "../components/Glass.astro";
 import Registration from "../components/Registration.astro";
 import Photo from "../components/Photo.astro";
-import { event } from "../data/event";
+import { event, asset } from "../data/event";
 
 const r = event.registration;
 const hasSponsors = event.sponsors.main.length + event.sponsors.partners.length > 0;
@@ -35,8 +35,8 @@ const tiers = [
         </p>
         <h1>Les 12 heures<br />du Jass</h1>
         <p class="lead">
-          Un tournoi par équipes de deux, ouvert à tous les âges. Assez animé pour s'amuser,
-          assez sérieux pour ceux qui veulent jouer leur vie aux cartes.
+          Un tournoi par équipes de deux, ouvert à tous les âges et tous les niveaux. Aussi animé que
+          possible mais autant sérieux que nécessaire !
         </p>
         <div class="hero-actions">
           <a class="button" href="#inscription">S'inscrire <Arrow /></a>
@@ -71,6 +71,20 @@ const tiers = [
     </div>
   </section>
 
+  <!-- === SOIRÉE === -->
+  <section id="soiree" class="section container">
+    <div class="evening" data-reveal>
+      <p class="evening-band">{event.evening.band}</p>
+      <h2>{event.evening.title}</h2>
+      <p class="lead">{event.evening.text}</p>
+      <ul class="evening-facts">
+        {event.evening.facts.map((fact) => (
+          <li>{fact}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
   <!-- === LOTS === -->
   <section id="lots" class="section container">
     <div class="section-head" data-reveal>
@@ -86,10 +100,6 @@ const tiers = [
         </li>
       ))}
     </ul>
-    <p class="glass" data-reveal>
-      <Glass />
-      <span>{event.prizes.glass}</span>
-    </p>
   </section>
 
   <!-- === INSCRIPTION === -->
@@ -97,13 +107,40 @@ const tiers = [
     <div class="sheet" data-reveal>
       <div class="sheet-head">
         <h2>Par deux, pour tous.</h2>
-        <p class="lead">Trouve ton partenaire, écris vos deux noms : le message s'écrit tout seul, tu l'envoies sur WhatsApp.</p>
+        <p class="lead">
+          Trouve ton partenaire, ou viens seul : le message s'écrit tout seul, tu l'envoies sur WhatsApp ou par
+          e-mail. Pas d'inscription ni de paiement sur place.
+        </p>
       </div>
       <Registration />
-      <p class:list={["price", { "price--soon": !r.price }]}>
-        <span>Prix d'inscription</span>
-        <strong>{r.price || "Communiqué à l'ouverture des inscriptions"}</strong>
-      </p>
+      <div class="terms">
+        <div class="price">
+          <span>Prix d'inscription</span>
+          <strong>{r.price.person} <small>par personne</small></strong>
+          <strong>{r.price.team} <small>par équipe</small></strong>
+        </div>
+        <p class="glass">
+          <Glass />
+          <span>{r.included}</span>
+        </p>
+        <div class="payment">
+          <p>
+            <strong>{r.onSite}</strong> {r.payment.text}
+          </p>
+          {r.payment.twintQr || r.payment.slip ? (
+            <div class="payment-means">
+              {r.payment.twintQr && <img src={asset(r.payment.twintQr)} alt="QR code TWINT du comité" width="160" height="160" loading="lazy" />}
+              {r.payment.slip && (
+                <a class="button button--ghost button--light" href={asset(r.payment.slip)} target="_blank" rel="noopener noreferrer">
+                  Bulletin de versement <Arrow diagonal />
+                </a>
+              )}
+            </div>
+          ) : (
+            <p class="payment-soon">QR code TWINT et bulletin de versement : bientôt ici.</p>
+          )}
+        </div>
+      </div>
     </div>
   </section>
 
@@ -173,10 +210,10 @@ const tiers = [
                 <li>
                   {s.url ? (
                     <a class="logo-tile" href={s.url} target="_blank" rel="noopener noreferrer">
-                      {s.logo ? <img src={s.logo} alt={s.name} loading="lazy" /> : s.name}
+                      {s.logo ? <img src={asset(s.logo)} alt={s.name} loading="lazy" /> : s.name}
                     </a>
                   ) : (
-                    <div class="logo-tile">{s.logo ? <img src={s.logo} alt={s.name} loading="lazy" /> : s.name}</div>
+                    <div class="logo-tile">{s.logo ? <img src={asset(s.logo)} alt={s.name} loading="lazy" /> : s.name}</div>
                   )}
                 </li>
               ))}
@@ -196,6 +233,7 @@ const tiers = [
   <!-- === RAPPEL FINAL === -->
   <section class="section container closing" data-reveal>
     <h2>Rendez-vous le {event.date.short}.</h2>
+    <p class="lead">Et le soir, dès 21h, la fête est ouverte à tous avec les Magic Men. Entrée gratuite.</p>
     <a class="button" href="#inscription">Inscrire mon équipe <Arrow /></a>
   </section>
 </Layout>
