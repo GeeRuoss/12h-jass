@@ -81,7 +81,7 @@ export const event = {
     // Sauce des pâtes de midi, à choisir pour chaque joueur.
     sauces: ["Bolo", "Carbo", "Pesto"],
     price: { person: "75.-", team: "150.-" },
-    included: "Un verre à vin gravé par personne et une bouteille par équipe sont compris dans l'inscription.",
+    included: "Le prix d'inscription comprend un verre à vin gravé par personne, une bouteille par équipe, le café-croissant, le repas de midi et une raclette le soir.",
     onSite: "Pas d'inscription ni de paiement sur place.",
     // Paiement : TWINT et bulletin de versement. Quand la banque aura tout préparé, poser le QR TWINT
     // dans public/images/ (par exemple "images/twint.png") et le bulletin en PDF dans public/ (par exemple "bulletin-versement.pdf").
