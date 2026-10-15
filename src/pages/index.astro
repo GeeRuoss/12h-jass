@@ -127,8 +127,13 @@ const tiers = [
           <p>
             <strong>{r.onSite}</strong> {r.payment.text}
           </p>
-          {r.payment.twintQr || r.payment.slip ? (
+          {r.payment.twintUrl || r.payment.twintQr || r.payment.slip ? (
             <div class="payment-means">
+              {r.payment.twintUrl && (
+                <a class="payment-twint" href={r.payment.twintUrl} target="_blank" rel="noopener noreferrer">
+                  <img src={asset("images/twint-button-fr.svg")} alt="Payer avec TWINT" height="58" />
+                </a>
+              )}
               {r.payment.twintQr && <img src={asset(r.payment.twintQr)} alt="QR code TWINT du comité" width="160" height="160" loading="lazy" />}
               {r.payment.slip && (
                 <a class="button button--ghost button--light" href={asset(r.payment.slip)} target="_blank" rel="noopener noreferrer">
@@ -137,7 +142,7 @@ const tiers = [
               )}
             </div>
           ) : (
-            <p class="payment-soon">QR code TWINT et bulletin de versement : bientôt ici.</p>
+            <p class="payment-soon">Les moyens de paiement seront bientôt disponibles.</p>
           )}
         </div>
       </div>

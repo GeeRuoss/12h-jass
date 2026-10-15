@@ -858,12 +858,29 @@ strong {
   align-items: center;
   gap: 1.25rem;
 }
-.payment-means img {
+.payment-means > img {
   width: 160px;
   height: 160px;
   border-radius: 16px;
   background: #fff;
   padding: 8px;
+}
+.payment-twint {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  max-width: 100%;
+}
+.payment-twint img {
+  display: block;
+  width: auto;
+  height: 58px;
+  max-width: 100%;
+}
+.payment-twint:focus-visible {
+  outline: 3px solid var(--paper);
+  outline-offset: 5px;
 }
 .button--light {
   border-color: rgba(243, 238, 228, 0.5);
