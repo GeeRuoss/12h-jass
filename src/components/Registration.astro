@@ -2,7 +2,7 @@
 // Inscription dans la page : le message s'écrit en direct, le visiteur l'envoie lui-même sur WhatsApp ou par e-mail.
 import Arrow from "./Arrow.astro";
 import WhatsAppIcon from "./WhatsAppIcon.astro";
-import { event, waLink, mailLink, telHref } from "../data/event";
+import { event, waLink, mailLink, telHref, asset } from "../data/event";
 const r = event.registration;
 const label = `${event.shortName} du ${event.date.label.toLowerCase()}`;
 const subject = `Inscription aux ${label}`;
@@ -21,6 +21,8 @@ const players = [
   data-email={r.email}
   data-subject={subject}
   data-event={label}
+  data-price-person={r.price.person}
+  data-price-team={r.price.team}
   novalidate
 >
   <div class="signup-fields">
@@ -64,6 +66,23 @@ const players = [
       Envoyer sur WhatsApp
       <Arrow diagonal />
     </a>
+    <div class="signup-reminder" id="signup-reminder" hidden tabindex="-1" role="status">
+      <p class="signup-reminder-title">Message prêt. Reste le paiement.</p>
+      <p>
+        Ton inscription est confirmée à réception du paiement : <strong id="signup-amount">{r.price.team} pour l'équipe</strong>.
+        Par TWINT dès maintenant, ou par virement bancaire selon les indications du comité.
+      </p>
+      {r.payment.twintUrl && (
+        <a class="payment-twint" href={r.payment.twintUrl} target="_blank" rel="noopener noreferrer">
+          <img src={asset("images/twint-button-fr.svg")} alt="Payer avec TWINT" height="58" />
+        </a>
+      )}
+      {r.payment.slip && (
+        <a class="button button--ghost" href={asset(r.payment.slip)} target="_blank" rel="noopener noreferrer">
+          Bulletin de versement <Arrow diagonal />
+        </a>
+      )}
+    </div>
     <p class="signup-others">
       {r.email && (
         <>
@@ -76,7 +95,7 @@ const players = [
       {(r.email || r.phone) && "."}
     </p>
     <p class="signup-help">
-      Relis le message, envoie-le : le comité confirme ton inscription et t'indique comment payer.
+      Relis le message et envoie-le. L'inscription est confirmée à réception du paiement.
     </p>
   </div>
   <noscript>
@@ -101,6 +120,10 @@ const players = [
     const preview = document.getElementById("signup-message")!;
     const send = document.getElementById("signup-send") as HTMLAnchorElement;
     const mail = document.getElementById("signup-mail") as HTMLAnchorElement | null;
+    const reminder = document.getElementById("signup-reminder")!;
+    const amount = document.getElementById("signup-amount")!;
+    const pricePerson = form.dataset.pricePerson || "";
+    const priceTeam = form.dataset.priceTeam || "";
     const value = (input: HTMLInputElement) => input.value.trim();
     const sauce = (id: string) => (form.querySelector(`input[name="sauce${id}"]:checked`) as HTMLInputElement | null)?.value || "";
     const sauces = (id: string) => form.querySelectorAll<HTMLInputElement>(`input[name="sauce${id}"]`);
@@ -141,7 +164,17 @@ const players = [
         const first = sauces(id)[0];
         first?.setCustomValidity(sauce(id) ? "" : "Choisis la sauce des pâtes.");
       });
-      if (!form.reportValidity()) event.preventDefault();
+      if (!form.reportValidity()) {
+        event.preventDefault();
+        return;
+      }
+      // Envoi validé : WhatsApp ou l'e-mail s'ouvre, le rappel de paiement reste sur la page.
+      amount.textContent = solo.checked ? `${pricePerson} pour une personne` : `${priceTeam} pour l'équipe`;
+      reminder.hidden = false;
+      window.setTimeout(() => {
+        reminder.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "nearest" });
+        reminder.focus({ preventScroll: true });
+      }, 400);
     };
     form.addEventListener("input", update);
     form.addEventListener("change", update);
