@@ -346,6 +346,52 @@ strong {
   }
 }
 
+/* === ENCART RUOSS COMMUNICATION === */
+.studio-promo {
+  padding-top: 1.25rem;
+}
+.studio-promo-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--r-card);
+  background: var(--red);
+  color: #fff;
+  transition: background 0.25s var(--ease);
+}
+.studio-promo-link:hover {
+  background: var(--red-deep);
+}
+.studio-promo-link img {
+  width: 59px;
+  height: 50px;
+  flex: none;
+  filter: brightness(0) invert(1);
+}
+.studio-promo-copy {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+.studio-promo-copy strong {
+  font-size: clamp(1rem, 1.7vw, 1.25rem);
+  letter-spacing: -0.02em;
+}
+@media (max-width: 359px) {
+  .studio-promo-link {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  .studio-promo-link img {
+    width: 47.2px;
+    height: 40px;
+  }
+}
+
 /* === ACCUEIL === */
 .hero {
   padding-block: clamp(2rem, 5vw, 5rem) clamp(3rem, 7vw, 7rem);
