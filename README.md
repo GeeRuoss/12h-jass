@@ -41,8 +41,14 @@ npm run images
 
 ## Publication
 
-Chaque push sur `main` compile, contrôle et publie la prévisualisation sur
-https://geeruoss.github.io/12h-jass/ (noindex tant que `PUBLIC_PREVIEW` vaut `true`).
+Chaque push sur `main` compile, contrôle et publie le site sur
+https://12hdujass.ch/ (GitHub Pages). `www.12hdujass.ch` et l'ancienne adresse
+https://geeruoss.github.io/12h-jass/ redirigent vers ce domaine principal.
 
-Pour un futur domaine : `SITE_URL=https://exemple.ch BASE_PATH=/ PUBLIC_PREVIEW=false npm run build`,
-puis servir le contenu de `dist/`.
+`npm run build:pages` produit la version du domaine avec l'indexation autorisée.
+`npm run build:preview` conserve le build de prévisualisation sous `/12h-jass/`
+avec `noindex` ; vérifier ce build avec `BASE_PATH=/12h-jass npm run check`.
+
+Le domaine est géré chez Hostpoint. Le domaine racine utilise les quatre adresses
+IPv4 et IPv6 de GitHub Pages ; `www` est un CNAME vers `geeruoss.github.io`.
+Conserver les enregistrements de messagerie Hostpoint lors des changements DNS.

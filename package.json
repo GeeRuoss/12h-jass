@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview --host 127.0.0.1 --port 4331",
     "check": "node scripts/check-site.mjs",
-    "build:pages": "SITE_URL=https://geeruoss.github.io BASE_PATH=/12h-jass PUBLIC_PREVIEW=true astro build",
+    "build:pages": "SITE_URL=https://12hdujass.ch BASE_PATH=/ PUBLIC_PREVIEW=false astro build",
+    "build:preview": "SITE_URL=https://geeruoss.github.io BASE_PATH=/12h-jass PUBLIC_PREVIEW=true astro build",
     "images": "node scripts/build-images.mjs"
   },
   "dependencies": {

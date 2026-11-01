@@ -2,7 +2,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
-const base = (process.env.BASE_PATH || "/12h-jass").replace(/\/$/, "");
+const base = (process.env.BASE_PATH || "/").replace(/\/$/, "");
 const dist = "dist";
 const expected = [
   "index.html",

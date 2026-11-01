@@ -1,4 +1,4 @@
-name: Publier la prévisualisation
+name: Publier le site
 on:
   push:
     branches: [main]
@@ -11,6 +11,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SITE_URL: https://12hdujass.ch
+      BASE_PATH: /
+      PUBLIC_PREVIEW: "false"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,10 +23,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-        env:
-          SITE_URL: https://geeruoss.github.io
-          BASE_PATH: /12h-jass
-          PUBLIC_PREVIEW: "true"
       - run: npm run check
       - uses: actions/upload-pages-artifact@v3
         with:
