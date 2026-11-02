@@ -147,13 +147,14 @@ const tiers = [
               {r.payment.twintQr && <img src={asset(r.payment.twintQr)} alt="QR code TWINT du comité" width="160" height="160" loading="lazy" />}
               {r.payment.slip && (
                 <a class="button button--ghost button--light" href={asset(r.payment.slip)} target="_blank" rel="noopener noreferrer">
-                  Bulletin de versement <Arrow diagonal />
+                  Bulletin de versement (PDF) <Arrow diagonal />
                 </a>
               )}
             </div>
           ) : (
             <p class="payment-soon">Les moyens de paiement seront bientôt disponibles.</p>
           )}
+          {r.payment.slip && <p>{r.payment.slipInstructions}</p>}
         </div>
       </div>
     </div>

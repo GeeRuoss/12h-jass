@@ -7,13 +7,12 @@ Astro génère des pages HTML/CSS/JS statiques, publiées sur GitHub Pages.
 
 Tout se règle dans un seul fichier : `src/data/event.ts`.
 
-- `registration.payment.twintQr` : chemin du QR TWINT dans `public/`.
-- `registration.payment.slip` : chemin du bulletin de versement PDF dans `public/`.
+- `registration.payment.twintQr` : chemin d'un éventuel QR TWINT dans `public/` (le lien de paiement est déjà actif).
 - `sponsors.main` et `sponsors.partners` : nom, lien et logo (fichier dans `public/images/sponsors/`).
 - `organizer.email` : contact du comité (mentions légales, bouton « Devenir sponsor »).
 - `prizes.items` : liste définitive des lots.
 
-Les inscriptions sont ouvertes par WhatsApp, e-mail ou téléphone, seul ou en équipe, avec le choix de sauce pour chaque joueur. Prix confirmés : 75 CHF par personne, 150 CHF par équipe. Le QR TWINT et le bulletin restent annoncés « bientôt ici » tant que les fichiers n'ont pas été fournis.
+Les inscriptions sont ouvertes par WhatsApp, e-mail ou téléphone, seul ou en équipe, avec le choix de sauce pour chaque joueur. Prix confirmés : 75 CHF par personne, 150 CHF par équipe. Le paiement est disponible par TWINT et par bulletin de versement PDF (`public/bulletin-versement.pdf`, fourni par le comité le 02/11/2026 et conservé à l'identique). Les deux moyens figurent dans la section inscription et dans le rappel de paiement. Pour un paiement par bulletin, le site demande aussi un message WhatsApp ou un e-mail avec les noms des joueurs, le nom d'équipe et les repas choisis.
 
 ## Développement
 

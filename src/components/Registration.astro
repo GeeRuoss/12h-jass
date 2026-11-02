@@ -70,7 +70,7 @@ const players = [
       <p class="signup-reminder-title">Message prêt. Reste le paiement.</p>
       <p>
         Ton inscription est confirmée à réception du paiement : <strong id="signup-amount">{r.price.team} pour l'équipe</strong>.
-        Par TWINT dès maintenant, ou par virement bancaire selon les indications du comité.
+        Par TWINT dès maintenant, ou avec le bulletin de versement ci-dessous.
       </p>
       {r.payment.twintUrl && (
         <a class="payment-twint" href={r.payment.twintUrl} target="_blank" rel="noopener noreferrer">
@@ -79,9 +79,10 @@ const players = [
       )}
       {r.payment.slip && (
         <a class="button button--ghost" href={asset(r.payment.slip)} target="_blank" rel="noopener noreferrer">
-          Bulletin de versement <Arrow diagonal />
+          Bulletin de versement (PDF) <Arrow diagonal />
         </a>
       )}
+      {r.payment.slip && <p>{r.payment.slipInstructions}</p>}
     </div>
     <p class="signup-others">
       {r.email && (

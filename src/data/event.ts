@@ -89,7 +89,8 @@ export const event = {
       text: "Paiement par TWINT ou par bulletin de versement, à réception de la confirmation.",
       twintUrl: "https://go.twint.ch/1/e/tw?tw=acq.Ggxlwj1XQnmRnlpqhW0OenYxQR_7CttUOcu3qmkqmyxN61Q77bPiGkqx4zYDuVS5.",
       twintQr: "",
-      slip: "",
+      slip: "bulletin-versement.pdf",
+      slipInstructions: "Si tu paies par bulletin, envoie aussi au comité un message WhatsApp ou un e-mail avec les prénoms et noms des joueurs, le nom d'équipe et les repas choisis (sauce des pâtes pour chacun).",
     },
   },
   sponsors: {
