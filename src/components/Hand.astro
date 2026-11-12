@@ -1,0 +1,96 @@
+---
+// Les lots présentés comme une main de jass : neuf cartes d'atout, une par lot.
+// Téléphone : les cartes s'empilent et s'ouvrent au toucher. Grand écran : elles s'ouvrent en éventail,
+// la carte choisie sort de la main. Sans JavaScript, les <details> restent utilisables un par un.
+import Suit from "./Suit.astro";
+import { event } from "../data/event";
+const { items, ranks } = event.prizes;
+const lots = items.map((item, i) => ({ ...item, ...ranks[i] }));
+const middle = (lots.length - 1) / 2;
+---
+
+<div class="hand" data-hand data-reveal>
+  {lots.map((lot, i) => (
+    <details class="lot" name="lots" open={i === 0} style={`--i:${i};--d:${i - middle}`}>
+      <summary class="pcard">
+        <span class="pcard-face" aria-hidden="true">
+          <span class="pcard-index">
+            <span class:list={["pcard-rank", { "pcard-rank--mark": lot.rank === "6" || lot.rank === "9" }]}>{lot.rank}</span>
+            <Suit suit="heart" class="pcard-suit" />
+          </span>
+          <Suit suit="heart" class="pcard-pip" />
+          <span class="pcard-index pcard-index--end">
+            <span class:list={["pcard-rank", { "pcard-rank--mark": lot.rank === "6" || lot.rank === "9" }]}>{lot.rank}</span>
+            <Suit suit="heart" class="pcard-suit" />
+          </span>
+        </span>
+        <h3 class="pcard-name"><span class="sr-only">{lot.card} : </span>{lot.name}</h3>
+      </summary>
+      <div class="lot-body">
+        <p class="lot-card">{lot.card}</p>
+        <p class="lot-name" aria-hidden="true">{lot.name}</p>
+        <p class="lot-text">{lot.text}</p>
+      </div>
+    </details>
+  ))}
+  <button class="button button--ghost hand-draw" type="button" data-draw hidden>Piocher une carte</button>
+</div>
+
+<script>
+  // === Main de cartes : une seule carte sortie à la fois, survol à la souris, pioche au hasard ===
+  const hand = document.querySelector<HTMLElement>("[data-hand]");
+  if (hand) {
+    const lots = Array.from(hand.querySelectorAll<HTMLDetailsElement>("details.lot"));
+    const fan = window.matchMedia("(min-width: 700px)");
+    const show = (lot: HTMLDetailsElement) => {
+      lots.forEach((other) => {
+        if (other !== lot) other.open = false;
+      });
+      lot.open = true;
+    };
+
+    lots.forEach((lot) => {
+      const card = lot.querySelector("summary")!;
+      // Repli pour les navigateurs sans <details name> : fermer les autres cartes à l'ouverture.
+      lot.addEventListener("toggle", () => {
+        if (lot.open) lots.forEach((other) => other !== lot && (other.open = false));
+      });
+      // En éventail, une carte reste toujours sortie : un clic sur la carte ouverte ne la range pas.
+      card.addEventListener("click", (event) => {
+        if (fan.matches && lot.open) event.preventDefault();
+      });
+      // Survol à la souris : la carte sort après un court instant, pour ne pas réagir à un simple passage.
+      let timer = 0;
+      card.addEventListener("pointerenter", (event) => {
+        if (!fan.matches || event.pointerType !== "mouse") return;
+        timer = window.setTimeout(() => show(lot), 110);
+      });
+      card.addEventListener("pointerleave", () => window.clearTimeout(timer));
+    });
+
+    // Si la fenêtre passe en éventail alors que tout est rangé, ressortir la première carte.
+    const ensureOne = () => {
+      if (fan.matches && !lots.some((lot) => lot.open)) show(lots[0]);
+    };
+    fan.addEventListener("change", ensureOne);
+    ensureOne();
+
+    // Pioche : chaque carte sort une fois avant que le paquet ne soit rebattu.
+    const draw = hand.querySelector<HTMLButtonElement>("[data-draw]");
+    let deck: HTMLDetailsElement[] = [];
+    if (draw) {
+      draw.hidden = false;
+      draw.addEventListener("click", () => {
+        if (!deck.length) {
+          deck = lots.filter((lot) => !lot.open);
+          for (let i = deck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [deck[i], deck[j]] = [deck[j], deck[i]];
+          }
+        }
+        const next = deck.shift();
+        if (next) show(next);
+      });
+    }
+  }
+</script>

@@ -8,9 +8,12 @@ Astro génère des pages HTML/CSS/JS statiques, publiées sur GitHub Pages.
 Tout se règle dans un seul fichier : `src/data/event.ts`.
 
 - `registration.payment.twintQr` : chemin d'un éventuel QR TWINT dans `public/` (le lien de paiement est déjà actif).
-- `sponsors.main` et `sponsors.partners` : nom, lien et logo (fichier dans `public/images/sponsors/`).
+- `sponsors.main` et `sponsors.partners` : nom, lien, logo (fichier dans `public/images/sponsors/`) et `scale` facultatif pour équilibrer la taille du logo dans sa tuile.
 - `organizer.email` : contact du comité (mentions légales, bouton « Devenir sponsor »).
-- `prizes.items` : liste définitive des lots.
+- `prizes.items` : les lots, du plus important au moins important. La carte suit la position : valet (bour), neuf (nell), as, roi, dame, dix, huit, sept, six. Pour changer l'ordre, déplacer les lignes.
+- `evening.logo` : logo du groupe de la soirée (une version plus grande que 300 px serait bienvenue).
+
+Lots, programme et sponsors principaux mis à jour le 12/11/2026 d'après la liste du comité.
 
 Les inscriptions sont ouvertes par WhatsApp, e-mail ou téléphone, seul ou en équipe, avec le choix de sauce pour chaque joueur. Prix confirmés : 75 CHF par personne, 150 CHF par équipe. Le paiement est disponible par TWINT et par bulletin de versement PDF (`public/bulletin-versement.pdf`, fourni par le comité le 02/11/2026 et conservé à l'identique). Les deux moyens figurent dans la section inscription et dans le rappel de paiement. Pour un paiement par bulletin, le site demande aussi un message WhatsApp ou un e-mail avec les noms des joueurs, le nom d'équipe et les repas choisis.
 
@@ -36,7 +39,7 @@ npm run images
 - `src/layouts/Layout.astro` : navigation, pied de page, métadonnées, données structurées Event.
 - `src/data/event.ts` : toutes les données du tournoi.
 - `src/styles/style.css` : style partagé, mobile d'abord.
-- `src/components/` : logo (Badge, Mark), enseignes de cartes (Suit), verre (Glass), flèche (Arrow).
+- `src/components/` : logo (Badge, Mark), enseignes de cartes (Suit), verre (Glass), flèche (Arrow), inscription (Registration), lots en main de cartes (Hand : pile sur téléphone, éventail sur grand écran).
 
 ## Publication
 

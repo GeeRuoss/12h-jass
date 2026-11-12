@@ -30,25 +30,26 @@ export const event = {
     },
     {
       time: "8h",
+      until: "13h15",
       title: "Début des matchs",
-      text: "Première donne. Les douze heures commencent.",
+      text: "Première donne. Les douze heures commencent. Pause de 15 minutes dans la matinée.",
     },
     {
-      time: "13h",
-      until: "14h30",
+      time: "13h15",
+      until: "14h45",
       title: "Repas de midi",
-      text: "Pâtes sur place, sauce au choix, le temps de refaire les parties du matin.",
+      text: "Pâtes sur place, sauce au choix. On ne saurait jouer le ventre vide et le gosier sec.",
     },
     {
-      time: "14h30",
-      until: "21h",
+      time: "14h45",
+      until: "20h",
       title: "Reprise des matchs",
-      text: "Les cartes reprennent jusqu'au soir.",
+      text: "Les cartes reprennent jusqu'au soir. Pause de 15 minutes dans l'après-midi.",
     },
     {
-      time: "21h",
+      time: "20h30",
       until: "minuit",
-      title: "Soirée avec les Magic Men",
+      title: "Remise des prix, puis soirée avec les Magic Men",
       text: "Raclette, apéro et baloche. Ouverte à tous, joueurs ou non, entrée libre.",
     },
   ],
@@ -56,18 +57,39 @@ export const event = {
   evening: {
     time: "Dès 21h",
     band: "Les Magic Men",
+    // Logo officiel repris de magic-men.ch (300 px, le plus grand disponible).
+    logo: "images/magic-men.webp",
+    url: "https://magic-men.ch/",
     title: "Le soir, tout le monde est invité.",
     text: "Dès 21h, les Magic Men animent la soirée : raclette, apéro et baloche jusqu'à minuit. Pas besoin d'avoir joué, l'entrée est gratuite.",
     facts: ["Dès 21h", "Ouvert à tous", "Entrée gratuite"],
   },
+  // Lots annoncés par Louis le 12/11/2026. Chaque lot porte une carte d'atout cœur, de la plus forte à la plus faible
+  // selon l'ordre du jass : valet (bour), neuf (nell), as, roi, dame, dix, huit, sept, six.
+  // Pour changer l'ordre d'importance, il suffit de déplacer les lignes : la carte suit la position.
   prizes: {
-    intro:
-      "Et si vous gagniez une paire de skis ? Ou un cochon détaillé, emballé et sous vide ? Repartirez-vous avec une nuit d'hôtel tout confort ou 150 kg de patates ? Restez attentifs, l'annonce des lots définitifs arrive bientôt !",
+    intro: "Atout cœur. Neuf cartes en main, un lot derrière chacune.",
+    ranks: [
+      { rank: "V", card: "Le bour, valet de cœur" },
+      { rank: "9", card: "Le nell, neuf de cœur" },
+      { rank: "A", card: "As de cœur" },
+      { rank: "R", card: "Roi de cœur" },
+      { rank: "D", card: "Dame de cœur" },
+      { rank: "10", card: "Dix de cœur" },
+      { rank: "8", card: "Huit de cœur" },
+      { rank: "7", card: "Sept de cœur" },
+      { rank: "6", card: "Six de cœur" },
+    ],
     items: [
-      { name: "Une paire de skis ?", suit: "spade" },
-      { name: "Un cochon ?", suit: "heart" },
-      { name: "Une nuit d'hôtel ?", suit: "club" },
-      { name: "150 kg de patates ?", suit: "diamond", featured: true },
+      { name: "Paires de skis", text: "Une paire de skis chacun, 2 skis par personne, 4 skis en tout\u202f! Rendez-vous compte\u202f!" },
+      { name: "Un bon voyage", text: "Allez voir ailleurs si nous y sommes." },
+      { name: "Caissette de légumes hebdomadaire", text: "Et ça, on le raie de la liste des courses." },
+      { name: "Demi-cochon bio", text: "Préparez-vous à faire de la place dans votre congèle\u202f!" },
+      { name: "Un four à raclette", text: "Pas de four\u202f? Pas de four, pas de raclette. Pas de raclette, pas de raclette." },
+      { name: "Produits du terroir", text: "Fromage, saucisse, vin, viandes sèches… Qu'il est bon notre terroir\u202f!" },
+      { name: "Une nuit d'hôtel", text: "Ça vous ferait une belle jambe si vous habitez dans le coin. Vous n'aurez au moins pas besoin de refaire les draps, c'est toujours ça." },
+      { name: "120\u00a0kg de patates", text: "1\u00a0kg par heure, rentable non\u202f? Aurez-vous la (mal)chance de «\u00a0tomber\u00a0» sur ce lot\u202f?" },
+      { name: "Et plus encore", text: "Goodies, bon restaurant, bon d'achat…" },
     ],
   },
   registration: {
@@ -94,12 +116,45 @@ export const event = {
     },
   },
   sponsors: {
-    // { name: "Nom", url: "https://…", logo: "images/sponsors/nom.svg" } : le logo est facultatif.
+    // { name: "Nom", url: "https://…", logo: "images/sponsors/nom.svg", scale: 1 } : logo et lien facultatifs, scale ajuste la taille optique.
     main: [
       {
         name: "Ruoss Communication",
         url: "https://www.ruosscommunication.com",
         logo: "images/sponsors/ruoss-communication.svg",
+        scale: 0.8,
+      },
+      {
+        name: "Fellay & Bruchez Carrelage, pierres naturelles",
+        url: "https://fellay-bruchez-carrelage.ch/",
+        logo: "images/sponsors/fellay-bruchez-carrelage.webp",
+        scale: 1.12,
+      },
+      {
+        name: "AXA, agence principale Valentin Baillifard, Verbier/Entremont",
+        url: "https://www.axa.ch/fr/aproposdaxa/endroits/agenturen/verbier_50002354.html",
+        logo: "images/sponsors/axa-verbier-entremont.svg",
+        scale: 1.08,
+      },
+      {
+        name: "Montagne Show",
+        url: "https://montagneshow.ch/",
+        logo: "images/sponsors/montagne-show.svg",
+      },
+      {
+        name: "Happy Sport, Le Châble",
+        url: "https://happysports.ch/",
+        logo: "images/sponsors/happy-sport.webp",
+      },
+      {
+        name: "Heinz Immobilier, Verbier",
+        url: "https://heinz-immobilier.ch/",
+        logo: "images/sponsors/heinz-immobilier.png",
+      },
+      {
+        name: "Domaine Jean-René Germanier",
+        url: "https://jrgermanier.ch/",
+        logo: "images/sponsors/domaine-jean-rene-germanier.webp",
       },
     ] as Sponsor[],
     partners: [] as Sponsor[],
@@ -122,7 +177,7 @@ export const event = {
   },
 };
 
-export type Sponsor = { name: string; url?: string; logo?: string };
+export type Sponsor = { name: string; url?: string; logo?: string; scale?: number };
 
 export const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 export const asset = (file: string) => `${base}/${file}`;
