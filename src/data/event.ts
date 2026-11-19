@@ -156,6 +156,12 @@ export const event = {
         url: "https://jrgermanier.ch/",
         logo: "images/sponsors/domaine-jean-rene-germanier.webp",
       },
+      {
+        name: "Val de Bagnes",
+        url: "https://www.valdebagnes.ch/",
+        logo: "images/sponsors/val-de-bagnes.webp",
+        scale: 1.1,
+      },
     ] as Sponsor[],
     partners: [] as Sponsor[],
   },

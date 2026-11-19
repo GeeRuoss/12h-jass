@@ -28,6 +28,7 @@ Fichiers dans `public/images/sponsors/` et `public/images/magic-men.webp`. Sourc
 | `happy-sport.webp` | fourni par le comité (10/11/2026) | recadrage, WebP |
 | `heinz-immobilier.png` | logo officiel de [heinz-immobilier.ch](https://heinz-immobilier.ch/), blanc sur transparent (le fichier reçu le 12/11/2026 était arrivé entièrement blanc) | passé dans le bleu du site de l'agence pour un fond clair |
 | `domaine-jean-rene-germanier.webp` | fourni par le comité (10/11/2026) | recadrage, WebP |
+| `val-de-bagnes.webp` | bannière « Val de Bagnes » fournie par Guillermo le 19/11/2026 | retrait du liseré de capture, WebP |
 | `magic-men.webp` | logo officiel de [magic-men.ch](https://magic-men.ch/), 300 px (le fichier reçu faisait 200 px) | recadrage, agrandissement ×2 |
 
 Les logos restent la propriété de leurs titulaires et sont affichés à la demande du comité pour signaler leur soutien au tournoi.
